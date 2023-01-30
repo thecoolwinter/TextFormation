@@ -31,11 +31,13 @@ public class NewlineProcessingFilter {
         let set = CharacterSet.whitespacesWithoutNewlines.inverted
         let location = mutation.range.location
 
-        guard let nonWhitespaceStart = interface.findPreceedingOccurrenceOfCharacter(in: set, from: location) else {
+        guard let nonWhitespaceStart = interface.findPreceedingOccurrenceOfCharacter(in: set, from: location),
+              let substring = interface.substring(from: NSRange(location: nonWhitespaceStart,
+                                                                length: location - nonWhitespaceStart))else {
             return
         }
 
-        if nonWhitespaceStart >= location {
+        if nonWhitespaceStart >= location || !CharacterSet(charactersIn: substring).intersection(set).isEmpty {
             return
         }
 
